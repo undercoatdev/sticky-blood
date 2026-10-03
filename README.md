@@ -26,14 +26,6 @@ This release supports the default 64-bit **Play Garry's Mod** launch on native W
 - Verified installers, automatic backups, safe uninstall, and update detection.
 - No redistributed Valve binaries.
 
-## Preview
-
-Gameplay GIFs are coming soon. The repository has a [`media`](media) folder ready for:
-
-- `infinite-decals.gif`
-- `animated-wound-bake.gif`
-- `ragdoll-revival.gif`
-
 ## Safety
 
 Sticky Blood modifies two local Garry's Mod DLLs. Use it for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
