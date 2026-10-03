@@ -1,0 +1,47 @@
+name: Bug report
+description: Report a Sticky Blood installer, decal, ragdoll, or compatibility problem
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Platform
+      options:
+        - Windows
+        - Linux with Proton
+    validations:
+      required: true
+  - type: dropdown
+    id: launch
+    attributes:
+      label: Garry's Mod launch option
+      options:
+        - Play Garry's Mod
+        - Another option
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: What happened?
+      description: Include clear reproduction steps and the expected result.
+    validations:
+      required: true
+  - type: textarea
+    id: installer
+    attributes:
+      label: Installer output
+      description: Paste the full installer or uninstaller output. Do not attach game DLLs.
+      render: text
+  - type: textarea
+    id: hashes
+    attributes:
+      label: DLL SHA-256 hashes
+      description: Include hashes for bin/win64/studiorender.dll and bin/win64/engine.dll.
+      render: text
+  - type: textarea
+    id: addons
+    attributes:
+      label: Relevant blood, gore, NPC, or ragdoll addons

@@ -1,0 +1,15 @@
+/dist/
+/build/
+*.dll
+*.bak
+*.tmp
+*.zip
+__pycache__/
+*.py[cod]
+.cursor/
+cursor.md
+CURSOR.md
+AGENTS.md
+CLAUDE.md
+*.plan.md
+agent-transcripts/

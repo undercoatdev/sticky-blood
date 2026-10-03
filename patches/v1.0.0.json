@@ -1,0 +1,33 @@
+{
+  "format": 1,
+  "version": "1.0.0",
+  "files": [
+    {
+      "path": "bin/win64/studiorender.dll",
+      "backup": "studiorender.dll.stickyblood-v1.bak",
+      "pristine_sha256": "01a040d57c4daac1b8a313a773579c89ee04463cc6f1409b3c2419dcefe25e8b",
+      "patched_sha256": "c98ea283ca15f2004d35d92e1b3754ce33aa3c8a455ec9ed337a0451463ac80d",
+      "patches": [
+        {"offset": "0x4714", "before": "7c", "after": "eb"},
+        {"offset": "0x4772", "before": "0f8cc8000000", "after": "e9c900000090"},
+        {"offset": "0x489d", "before": "00080000", "after": "00f00000"},
+        {"offset": "0x48a7", "before": "660f1f840000000000", "after": "e9e405000000000000"},
+        {"offset": "0x4984", "before": "00080000", "after": "00f00000"},
+        {"offset": "0x4aca", "before": "00400000", "after": "00f00000"},
+        {"offset": "0x94bb", "before": "410fb7c24883c428415f415e415d5dc3", "after": "e9bc3f08009090909090909090909090"},
+        {"offset": "0x8d47c", "before": "cccccccccccccccccccccccccccccccccccc", "after": "43837c0818007505e912000000e9eabff7ff"},
+        {"offset": "0x8d49b", "before": "cccccccccccccccccccccccccccccccc", "after": "410fb7c24883c428415f415e415d5dc3"}
+      ]
+    },
+    {
+      "path": "bin/win64/engine.dll",
+      "backup": "engine.dll.stickyblood-v1.bak",
+      "pristine_sha256": "7c21e827722fa7ac9ba4539dc652d3b79f58e240da49d28e75a1a9a1a88c4173",
+      "patched_sha256": "c21f5e735f96e6057386c420fbddd8e2fcb7347d9988ab039b4dcf2a71e71961",
+      "patches": [
+        {"offset": "0x12da4e", "before": "0f83d4000000", "after": "909090909090"},
+        {"offset": "0x12da68", "before": "488d0d99872900ff151b142600448b0554de", "after": "33c0488b5c2430488b7424384883c4205fc3"}
+      ]
+    }
+  ]
+}
