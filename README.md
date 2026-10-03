@@ -32,10 +32,10 @@ If Garry's Mod has updated since that version, roll the game back to the documen
 3. Double-click `install.bat`.
 4. Start the game with **Play Garry's Mod**.
 
-If Steam is not detected, open Command Prompt in the extracted folder and run:
+If Steam is not detected, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted Sticky Blood folder and replace the example path below with that folder:
 
 ```bat
-install.bat -GamePath "D:\SteamLibrary\steamapps\common\GarrysMod"
+install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
 ```
 
 ## Linux/Proton installation
