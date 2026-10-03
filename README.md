@@ -1,11 +1,3 @@
-
-
-https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5
-
-
-
-
-
 # Sticky Blood
 
 [![Release](https://img.shields.io/github/v/release/undercoatdev/sticky-blood?display_name=tag&sort=semver)](https://github.com/undercoatdev/sticky-blood/releases/latest)
@@ -13,24 +5,29 @@ https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5
 [![License](https://img.shields.io/github/license/undercoatdev/sticky-blood)](LICENSE)
 [![Garry's Mod](https://img.shields.io/badge/Garry's%20Mod-64--bit-1b9cff)](https://store.steampowered.com/app/4000/Garrys_Mod/)
 
-Sticky Blood removes Garry's Mod's normal model- and world-decal recycling, keeps wounds through NPC ragdolling and revival, and preserves the last frame of compatible animated blood wounds.
+Sticky Blood makes blood decals in Garry's Mod stick around. Wounds can pile up on NPCs and the world, remain on bodies when NPCs become ragdolls, and preserve the last frame of supported animated blood effects.
 
-This release supports the default 64-bit **Play Garry's Mod** launch on native Windows and Linux through Proton. It is version-locked to the game DLLs listed in `patches/v1.0.0.json`.
+[Watch Sticky Blood in action.](https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5)
 
 ## Features
 
-- Effectively persistent world and model decals without recycling older blood.
-- Independent decal meshes so many wounds can overlap on the same body.
-- Animated Galaxy/Zippy wounds freeze into permanent final-frame stains.
-- Wounds survive NPC death, server ragdolls, and Debug Reviver transitions.
-- Verified installers, automatic backups, safe uninstall, and update detection.
-- No redistributed Valve binaries.
+- Persistent blood on map surfaces, NPCs, and ragdolls.
+- Overlapping wounds without older decals being recycled.
+- Wounds that carry over when an NPC becomes a ragdoll.
+- Optional support for preserving compatible animated wounds.
 
-## Safety
+## Before installing
 
-Sticky Blood modifies two local Garry's Mod DLLs. Use it for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
+Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. Use it only for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
 
-The release does not contain or redistribute Valve DLLs. The installer verifies and patches your own files. If Garry's Mod updates, the installer will refuse unknown files instead of guessing.
+The installer checks both DLLs against the supported version, backs up the originals, and refuses to patch unknown or modified files. The release does not contain or redistribute Valve binaries.
+
+Version 1.0.0 supports the default 64-bit **Play Garry's Mod** launch on:
+
+- Windows
+- Linux through Proton
+
+Compatibility is tied to the exact DLL hashes in `patches/v1.0.0.json`. A Garry's Mod update may require a new Sticky Blood release.
 
 ## Windows installation
 
@@ -62,39 +59,35 @@ If Steam is not detected:
 
 Python 3 is required on Linux for safe hash verification and patching.
 
-## Animated wounds
+## Optional features
 
-Compatible Galaxy/Zippy animated wounds require:
+### Animated wounds
+
+Compatible Galaxy/Zippy animated wounds can leave their final frame behind as a persistent decal. Enable multicore rendering first:
 
 ```text
 gmod_mcore_test 1
 ```
 
-The animation plate plays normally. When it is removed, Sticky Blood stamps its final texture frame onto the NPC or ragdoll as another permanent decal layer.
+The effect must use a material under `animated_blood/` or `decals/flesh/animated/`. Other animated wound materials are ignored.
 
-## Debug Reviver
+### Debug Reviver
 
-The **Debug Reviver** appears in the Weapons tab. Primary-fire a supported dead NPC or ragdoll to recreate it standing while retaining its model-instance wounds.
+The **Debug Reviver** appears in the Weapons tab. Primary-fire a supported dead NPC or ragdoll to recreate it standing with its wounds intact.
 
 Sticky Blood enables `ai_serverragdolls 1`. It does not override `g_ragdoll_maxcount`.
 
-## Uninstall
+## Uninstall and recovery
 
 Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on Linux. The uninstaller restores only verified v1 backups and removes `garrysmod/addons/sticky_blood`.
 
 If a backup is missing or a DLL is from another game version, the uninstaller refuses to overwrite it. Use Steam's **Verify integrity of game files** to restore official DLLs.
 
-## Updates and recovery
+- **After Steam Verify:** Run the Sticky Blood installer again; verification restores the original DLLs.
+- **After a game update:** If the installer rejects the new DLLs, wait for a compatible Sticky Blood release instead of forcing the patch.
+- **To reinstall:** Running the installer again on a verified v1 installation is safe.
+- **Backups:** Original DLLs are stored beside the game files with the suffix `.stickyblood-v1.bak`.
 
-- Steam Verify restores the original DLLs and disables the binary part of Sticky Blood. Run the installer again afterward.
-- A Garry's Mod update may change the DLL hashes. Wait for a compatible Sticky Blood manifest rather than forcing the patch.
-- The installer is idempotent: running it again on a verified v1 installation is safe.
-- Backups are created beside the game DLLs with the suffix `.stickyblood-v1.bak`.
+## Workshop limitation
 
-## Workshop
-
-The complete mod cannot be distributed as a normal Workshop addon because Workshop content cannot replace the game-loaded `bin/win64/studiorender.dll` and `engine.dll`. A Lua-only Workshop upload would not provide infinite decals.
-
-## Distribution contents
-
-The release ZIP is built from an explicit allowlist. It contains the addon, installers, patch manifest, and user documentation only. It excludes Valve DLLs, backups, obsolete experiments, plans, transcripts, `.cursor`, `cursor.md`, `AGENTS.md`, and other agentic metadata.
+Sticky Blood cannot work as a normal Workshop-only addon because Workshop content cannot replace the two game-loaded DLLs it patches. The Lua addon alone does not provide persistent decals.
