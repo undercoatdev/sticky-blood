@@ -14,7 +14,6 @@ Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 - Blood stays on the map and on character models.
 - New splatters do not replace older ones.
 - Blood already on an NPC stays visible when it dies and becomes a ragdoll.
-- Supported animated effects leave behind a final stain instead of vanishing.
 
 ## Before installing
 
@@ -22,9 +21,9 @@ Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. U
 
 The installer checks that both DLLs match a supported game version, backs up the originals, and stops if either file is unknown or already modified. The download does not include any Valve binaries.
 
-Version 1.0.0 is made for Steam's standard 64-bit **Play Garry's Mod** launch option. It works on Windows and on Linux through Proton.
+Version 1.0.0 supports only the Garry's Mod version identified by the DLL hashes in `patches/v1.0.0.json`. Use Steam's standard 64-bit **Play Garry's Mod** launch option on Windows or Linux through Proton.
 
-If a Garry's Mod update changes either DLL, the installer will stop rather than risk patching the wrong version. Wait for a compatible Sticky Blood release before trying again.
+If Garry's Mod has updated since that version, roll the game back to the documented version before installing Sticky Blood. The installer stops when the DLLs do not match.
 
 ## Windows installation
 
@@ -60,15 +59,11 @@ Python 3 is required to run the Linux installer.
 
 ### Animated wounds
 
-Animated blood normally disappears when its animation ends. Sticky Blood lets the animation play, then turns its last frame into a static blood stain when the effect is removed.
-
-This has been tested with Galaxy/Zippy animated wounds, but compatibility is not guaranteed for every version or blood pack. Enable multicore rendering first:
+Galaxy/Zippy's animated blood mod was tested with Sticky Blood and worked as intended. Enable multicore rendering first:
 
 ```text
 gmod_mcore_test 1
 ```
-
-Sticky Blood only recognizes effects whose materials are under `animated_blood/` or `decals/flesh/animated/`. Effects stored elsewhere will continue to disappear normally.
 
 ### Debug Reviver
 
@@ -82,8 +77,8 @@ Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on 
 
 If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood` by hand, then use Steam's **Verify integrity of game files** to restore the official DLLs.
 
-- **After Steam Verify:** Run the Sticky Blood installer again if you still want to use the mod.
-- **After a game update:** If the installer rejects the new DLLs, wait for a compatible Sticky Blood release instead of forcing the patch.
+- **After Steam Verify:** Reinstall Sticky Blood only if the restored game files match the documented version. Otherwise, roll the game back first.
+- **After a game update:** Roll Garry's Mod back to the documented version before reinstalling Sticky Blood.
 - **Backups:** Original DLLs are stored beside the game files with the suffix `.stickyblood-v1.bak`.
 
 ## Workshop limitation
