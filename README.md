@@ -1,11 +1,3 @@
-
-
-https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5
-
-
-
-
-
 # Sticky Blood
 
 [![Release](https://img.shields.io/github/v/release/undercoatdev/sticky-blood?display_name=tag&sort=semver)](https://github.com/undercoatdev/sticky-blood/releases/latest)
@@ -13,24 +5,25 @@ https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5
 [![License](https://img.shields.io/github/license/undercoatdev/sticky-blood)](LICENSE)
 [![Garry's Mod](https://img.shields.io/badge/Garry's%20Mod-64--bit-1b9cff)](https://store.steampowered.com/app/4000/Garrys_Mod/)
 
-Sticky Blood removes Garry's Mod's normal model- and world-decal recycling, keeps wounds through NPC ragdolling and revival, and preserves the last frame of compatible animated blood wounds.
+Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 
-This release supports the default 64-bit **Play Garry's Mod** launch on native Windows and Linux through Proton. It is version-locked to the game DLLs listed in `patches/v1.0.0.json`.
+[Watch Sticky Blood in action.](https://github.com/user-attachments/assets/b8fdd3f4-1789-4b1f-9723-999c23507da5)
 
 ## Features
 
-- Effectively persistent world and model decals without recycling older blood.
-- Independent decal meshes so many wounds can overlap on the same body.
-- Animated Galaxy/Zippy wounds freeze into permanent final-frame stains.
-- Wounds survive NPC death, server ragdolls, and Debug Reviver transitions.
-- Verified installers, automatic backups, safe uninstall, and update detection.
-- No redistributed Valve binaries.
+- Blood stays on the map and on character models.
+- New splatters do not replace older ones.
+- Blood already on an NPC stays visible when it dies and becomes a ragdoll.
 
-## Safety
+## Before installing
 
-Sticky Blood modifies two local Garry's Mod DLLs. Use it for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
+Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. Use it only for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
 
-The release does not contain or redistribute Valve DLLs. The installer verifies and patches your own files. If Garry's Mod updates, the installer will refuse unknown files instead of guessing.
+The installer checks that both DLLs match a supported game version, backs up the originals, and stops if either file is unknown or already modified. The download does not include any Valve binaries.
+
+Version 1.0.0 supports only the Garry's Mod version identified by the DLL hashes in `patches/v1.0.0.json`. Use Steam's standard 64-bit **Play Garry's Mod** launch option on Windows or Linux through Proton.
+
+If Garry's Mod has updated since that version, roll the game back to the documented version before installing Sticky Blood. The installer stops when the DLLs do not match.
 
 ## Windows installation
 
@@ -60,41 +53,34 @@ If Steam is not detected:
 ./install.sh --game "/path/to/SteamLibrary/steamapps/common/GarrysMod"
 ```
 
-Python 3 is required on Linux for safe hash verification and patching.
+Python 3 is required to run the Linux installer.
 
-## Animated wounds
+## Optional features
 
-Compatible Galaxy/Zippy animated wounds require:
+### Animated wounds
+
+Galaxy/Zippy's animated blood mod was tested with Sticky Blood and worked as intended. Enable multicore rendering first:
 
 ```text
 gmod_mcore_test 1
 ```
 
-The animation plate plays normally. When it is removed, Sticky Blood stamps its final texture frame onto the NPC or ragdoll as another permanent decal layer.
+### Debug Reviver
 
-## Debug Reviver
+The **Debug Reviver** appears in the Weapons tab. Aim it at a dead NPC or a ragdoll created from one, then use primary fire to bring the NPC back without wiping away the blood already on it.
 
-The **Debug Reviver** appears in the Weapons tab. Primary-fire a supported dead NPC or ragdoll to recreate it standing while retaining its model-instance wounds.
+Sticky Blood turns on `ai_serverragdolls 1`, but your existing `g_ragdoll_maxcount` limit still applies.
 
-Sticky Blood enables `ai_serverragdolls 1`. It does not override `g_ragdoll_maxcount`.
+## Uninstall and recovery
 
-## Uninstall
+Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on Linux. The uninstaller restores the original DLLs from its verified backups and removes `garrysmod/addons/sticky_blood`.
 
-Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on Linux. The uninstaller restores only verified v1 backups and removes `garrysmod/addons/sticky_blood`.
+If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood` by hand, then use Steam's **Verify integrity of game files** to restore the official DLLs.
 
-If a backup is missing or a DLL is from another game version, the uninstaller refuses to overwrite it. Use Steam's **Verify integrity of game files** to restore official DLLs.
+- **After Steam Verify:** Reinstall Sticky Blood only if the restored game files match the documented version. Otherwise, roll the game back first.
+- **After a game update:** Roll Garry's Mod back to the documented version before reinstalling Sticky Blood.
+- **Backups:** Original DLLs are stored beside the game files with the suffix `.stickyblood-v1.bak`.
 
-## Updates and recovery
+## Workshop limitation
 
-- Steam Verify restores the original DLLs and disables the binary part of Sticky Blood. Run the installer again afterward.
-- A Garry's Mod update may change the DLL hashes. Wait for a compatible Sticky Blood manifest rather than forcing the patch.
-- The installer is idempotent: running it again on a verified v1 installation is safe.
-- Backups are created beside the game DLLs with the suffix `.stickyblood-v1.bak`.
-
-## Workshop
-
-The complete mod cannot be distributed as a normal Workshop addon because Workshop content cannot replace the game-loaded `bin/win64/studiorender.dll` and `engine.dll`. A Lua-only Workshop upload would not provide infinite decals.
-
-## Distribution contents
-
-The release ZIP is built from an explicit allowlist. It contains the addon, installers, patch manifest, and user documentation only. It excludes Valve DLLs, backups, obsolete experiments, plans, transcripts, `.cursor`, `cursor.md`, `AGENTS.md`, and other agentic metadata.
+Sticky Blood cannot be installed through the Workshop alone because Workshop addons cannot replace the two game DLLs it needs. Use the release download and installer instead.
