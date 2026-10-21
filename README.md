@@ -19,11 +19,9 @@ Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 
 Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. Use it only for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
 
-The installer checks that both DLLs match a supported game version, backs up the originals, and stops if either file is unknown or already modified. The download does not include any Valve binaries.
+The installer looks for the exact code it changes. If a Garry's Mod update changes that code, it stops without touching anything. Run `install --dry-run` and open an issue with the output. The download does not include any Valve binaries.
 
-Version 1.0.0 supports only the Garry's Mod version identified by the DLL hashes in `patches/v1.0.0.json`. Use Steam's standard 64-bit **Play Garry's Mod** launch option on Windows or Linux through Proton.
-
-If Garry's Mod has updated since that version, roll the game back to the documented version before installing Sticky Blood. The installer stops when the DLLs do not match.
+Sticky Blood supports the x86-64 branch only. Native Linux is not supported (Proton only). Use Steam's standard 64-bit **Play Garry's Mod** launch option on Windows or Linux through Proton.
 
 ## Windows installation
 
@@ -31,6 +29,8 @@ If Garry's Mod has updated since that version, roll the game back to the documen
 2. Extract the release ZIP.
 3. Double-click `install.bat`.
 4. Start the game with **Play Garry's Mod**.
+
+To see the planned edits without changing any files, run `install.bat -DryRun`.
 
 If Steam is not detected, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted Sticky Blood folder and replace the example path below with that folder:
 
@@ -45,6 +45,12 @@ Fully quit Garry's Mod, extract the release, then run:
 ```bash
 chmod +x install.sh uninstall.sh
 ./install.sh
+```
+
+To see the planned edits without changing any files:
+
+```bash
+./install.sh --dry-run
 ```
 
 If Steam is not detected:
@@ -77,9 +83,9 @@ Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on 
 
 If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood` by hand, then use Steam's **Verify integrity of game files** to restore the official DLLs.
 
-- **After Steam Verify:** Reinstall Sticky Blood only if the restored game files match the documented version. Otherwise, roll the game back first.
-- **After a game update:** Roll Garry's Mod back to the documented version before reinstalling Sticky Blood.
-- **Backups:** Original DLLs are stored beside the game files with the suffix `.stickyblood-v1.bak`.
+- **After Steam Verify:** Install Sticky Blood again. The installer looks for the exact code it changes. If a Garry's Mod update changes that code, it stops without touching anything. Run `install --dry-run` and open an issue with the output.
+- **After a game update:** Run `install --dry-run`. When the signatures still match, install as usual.
+- **Backups:** Original DLLs are stored beside the game files as `.stickyblood.bak` with a `.stickyblood.json` sidecar. Backups from 1.0.0 (`.stickyblood-v1.bak`, or a `.bak` whose hash matches that release) are still accepted.
 
 ## Workshop limitation
 

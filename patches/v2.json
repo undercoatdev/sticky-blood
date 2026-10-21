@@ -1,0 +1,38 @@
+{
+  "format": 2,
+  "version": "1.1.0",
+  "comment": "Signature-based patch manifest. Hex patterns: '??' = wildcard byte. [ ] inside 'sig' marks the patch site (bytes that 'expect' describes and 'replace' overwrites). Each sig must match EXACTLY once in the file. Tokens in replace: {rel32:LABEL} = little-endian int32 (LABEL - address_after_these_4_bytes); {keep} = keep original byte. LABEL = anchor or patch id, optional +N/-N.",
+  "files": [
+    {
+      "path": "bin/win64/studiorender.dll",
+      "backup": "studiorender.dll.stickyblood.bak",
+      "known_pristine_sha256": ["01a040d57c4daac1b8a313a773579c89ee04463cc6f1409b3c2419dcefe25e8b", "aa05d088313effa211995de84633f119c7debd091b9214e983fb3b87e6fd58f2"],
+      "anchors": [
+        {"id": "sr_flush_exit", "sig": "89 43 0c 66 41 ff 85 ?? ?? ?? ?? [48 8b 4d 68] e8 ?? ?? ?? ?? 33 c0 49 89 85 e0 00 00 00 49 89 45 08 49 89 85 08 01 00 00"},
+        {"id": "sr_find_continue", "sig": "4c 69 c0 88 00 00 00 4f 39 34 08 75 07 4b 39 6c 08 78 74 ?? [47 0f b7 94 08 82 00 00 00] 66 45 3b d5 75 ??"}
+      ],
+      "patches": [
+        {"id": "sr_skip_count_evict", "sig": "8b 48 14 b8 96 00 00 00 8d 14 89 03 d2 3b d0 0f 4f c2 41 39 85 ?? ?? ?? ?? [7c] ?? 4d 8b 85 ?? ?? ?? ?? 4d 85 c0 74 ??", "expect": "7c", "replace": "eb"},
+        {"id": "sr_skip_lod_evict", "sig": "4d 03 d2 43 0f b7 4c d3 1e 3b 48 14 [0f 8c ?? ?? ?? ??] 47 0f b7 4c d3 18 8b 72 04 41 0f b7 c1", "expect": "0f 8c ?? ?? ?? ??", "replace": "e9 {rel32:@jcc32} 90"},
+        {"id": "sr_limit_a", "sig": "4c 69 f1 88 00 00 00 4d 03 75 10 41 81 7e 18 [00 08 00 00] 0f 8e ?? ?? ?? ?? 66 0f 1f 84 00 00 00 00 00", "expect": "00 08 00 00", "replace": "00 f0 00 00"},
+        {"id": "sr_jump_past_flush", "sig": "41 81 7e 18 ?? ?? 00 00 0f 8e ?? ?? ?? ?? [66 0f 1f 84 00 00 00 00 00] 49 8b 04 24 41 bf ff ff 00 00", "expect": "66 0f 1f 84 00 00 00 00 00", "replace": "e9 {rel32:sr_flush_exit} 00 00 00 00"},
+        {"id": "sr_limit_b", "sig": "49 8b d4 49 8b cd e8 ?? ?? ?? ?? 41 81 7e 18 [00 08 00 00] 0f 8f ?? ?? ?? ?? 44 8b 7d 08", "expect": "00 08 00 00", "replace": "00 f0 00 00"},
+        {"id": "sr_limit_c", "sig": "66 85 ff 75 ?? 45 85 ed 0f 84 ?? ?? ?? ?? 41 81 fd [00 40 00 00] 0f 8e ?? ?? ?? ?? 48 63 81 90 01 00 00", "expect": "00 40 00 00", "replace": "00 f0 00 00"},
+        {"id": "sr_find_hook", "sig": "e8 ?? ?? ?? ?? 0f b7 f0 66 41 3b f5 75 ?? 41 0f b7 f5 e9 ?? ?? ?? ?? [41 0f b7 c2 48 83 c4 28 41 5f 41 5e 41 5d 5d c3] 48 69 de 88 00 00 00", "expect": "41 0f b7 c2 48 83 c4 28 41 5f 41 5e 41 5d 5d c3", "replace": "e9 {rel32:sr_cave1} 90 90 90 90 90 90 90 90 90 90 90"},
+        {"id": "sr_cave1", "sig": "48 83 ec 28 ff 15 ?? ?? ?? ?? 48 85 c0 48 89 05 ?? ?? ?? ?? 0f 95 c0 48 83 c4 28 c3 [cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc] cc cc 48 83 25 ?? ?? ?? ?? 00 b0 01 c3 cc", "expect": "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc", "replace": "43 83 7c 08 18 00 75 05 e9 {rel32:sr_cave2} e9 {rel32:sr_find_continue}"},
+        {"id": "sr_cave2", "sig": "48 83 25 ?? ?? ?? ?? 00 b0 01 c3 [cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc] cc cc cc cc cc 48 8b 05 ?? ?? ?? ?? c3", "expect": "cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc cc", "replace": "41 0f b7 c2 48 83 c4 28 41 5f 41 5e 41 5d 5d c3"}
+      ]
+    },
+    {
+      "path": "bin/win64/engine.dll",
+      "backup": "engine.dll.stickyblood.bak",
+      "known_pristine_sha256": ["7c21e827722fa7ac9ba4539dc652d3b79f58e240da49d28e75a1a9a1a88c4173", "f3e4775828b07dfb4d49e68cc9dcd8ac3cb38355623a5a7bcbe359d3ffe37580"],
+      "anchors": [],
+      "patches": [
+        {"id": "en_never_recycle", "sig": "49 8b 0c c1 48 85 c9 74 ?? 0f b7 51 68 f6 c2 01 75 ?? 66 0f ba e2 0c [0f 83 ?? ?? ?? ??] ff c3 48 ff c0 41 3b d8 7c ?? 8b de 48 8b c6 49 3b c2 75 ??", "expect": "0f 83 ?? ?? ?? ??", "replace": "90 90 90 90 90 90"},
+        {"id": "en_return_null", "sig": "49 3b c2 75 ?? [48 8d 0d ?? ?? ?? ?? ff 15 ?? ?? ?? ?? 44 8b 05 ?? ??] ?? ?? 4c 8b 0d ?? ?? ?? ?? 40 38 35 ?? ?? ?? ?? 75 ??", "expect": "48 8d 0d ?? ?? ?? ?? ff 15 ?? ?? ?? ?? 44 8b 05 ?? ??", "replace": "33 c0 48 8b 5c 24 30 48 8b 74 24 38 48 83 c4 20 5f c3",
+         "require_before": {"sig": "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 8b f9", "distance": 200}}
+      ]
+    }
+  ]
+}

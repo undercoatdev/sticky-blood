@@ -33,7 +33,7 @@ body:
     id: installer
     attributes:
       label: Installer output
-      description: Paste the full installer or uninstaller output. Do not attach game DLLs.
+      description: Paste the full installer or uninstaller output. For an unsupported build, include `install --dry-run`. Do not attach game DLLs.
       render: text
   - type: textarea
     id: hashes

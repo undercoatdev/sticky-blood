@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.1.0
+
+- Locate patch sites by byte signatures, so a Garry's Mod update can still install when that code has only moved.
+- Stop without modifying files when a signature is missing, ambiguous, or the original bytes differ.
+- Add `install --dry-run` so an unsupported build can be reported from the plan output.
+- Keep 1.0.0 backups usable when their hash matches that release.
+- Require the x86-64 branch. Native Linux is not supported (Proton only).
+
 ## 1.0.0
 
 - Prevented global and per-model decal retirement.
