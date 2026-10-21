@@ -95,9 +95,9 @@ end
 function StickyBlood.DecalForBloodColor(color)
 	color = tonumber(color)
 	if not color then return nil end
-	if color == 0 then return "Blood" end
+	if color == 0 then return "Impact.Flesh" end
 	if color == 1 or color == 2 or color == 4 or color == 5 or color == 6 then
-		return "YellowBlood"
+		return "Impact.AlienFlesh"
 	end
 	return nil
 end
