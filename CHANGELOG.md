@@ -2,6 +2,7 @@
 
 ## 1.1.0
 
+- Shotgun volleys that kill an NPC now keep all their wounds on the ragdoll.
 - Locate patch sites by byte signatures, so a Garry's Mod update can still install when that code has only moved.
 - Stop without modifying files when a signature is missing, ambiguous, or the original bytes differ.
 - Add `install --dry-run` so an unsupported build can be reported from the plan output.

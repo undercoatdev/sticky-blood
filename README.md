@@ -90,6 +90,20 @@ Galaxy/Zippy's animated blood mod was tested with Sticky Blood and worked as int
 gmod_mcore_test 1
 ```
 
+### Death wounds
+
+Bullet hits from the kill, including a full shotgun volley, are painted back onto the ragdoll. Pellets that land in the same server tick as the death are kept, and so are pellets that hit the ragdoll just after it appears. In the Garry's Mod console:
+
+```text
+sticky_blood_carry 1
+sticky_blood_carry_ticks 1
+sticky_blood_carry_window 0.3
+sticky_blood_carry_max 32
+sticky_blood_debug 0
+```
+
+`sticky_blood_carry` turns this on (`1`) or off (`0`). `sticky_blood_carry_ticks` is how many server ticks before the death still count. `sticky_blood_carry_window` is how many seconds of bullet hits on the new ragdoll are kept. `sticky_blood_carry_max` is the most hits kept on one body. `sticky_blood_debug 1` prints one line each time hits are carried.
+
 ### Debug Reviver
 
 The **Debug Reviver** appears in the Weapons tab. Aim it at a dead NPC or a ragdoll created from one, then use primary fire to bring the NPC back without wiping away the blood already on it.

@@ -126,27 +126,121 @@ end
 
 hook.Add("EntityRemoved", "StickyBlood_FreezeFrame", stampFinishedGif)
 
+local function paintedCount(hits)
+	local n = 0
+	for i = 1, #hits do
+		if hits[i].painted then n = n + 1 end
+	end
+	return n
+end
+
+local function hitsSettled(hits)
+	for i = 1, #hits do
+		if not hits[i].applied then return false end
+	end
+	return true
+end
+
+local function applyCarriedHits(rag, blood, hits)
+	if not IsValid(rag) or not hits then return end
+	local decal = StickyBlood.DecalForBloodColor(blood)
+	for i = 1, #hits do
+		local hit = hits[i]
+		if not hit.applied then
+			if not decal then
+				hit.applied = true
+			else
+				local matrix = rag.GetBoneMatrix and rag:GetBoneMatrix(hit.bone or 0)
+				if matrix then
+					local wpos, wdir = StickyBlood.BoneHitToWorld(hit.pos, hit.dir, matrix:GetTranslation(), matrix:GetAngles())
+					local pos = Vector(wpos.x, wpos.y, wpos.z)
+					local dir = Vector(wdir.x, wdir.y, wdir.z)
+					-- Trace filter: true keeps the entity (only the ragdoll).
+					util.Decal(decal, pos - dir * 4, pos + dir * 8, function(ent)
+						return ent == rag
+					end)
+					hit.applied = true
+					hit.painted = true
+				end
+			end
+		end
+	end
+end
+
+local function finishCarry(rag, hits, retries)
+	if not hits or #hits == 0 then return end
+	StickyBlood.DebugCarry("client", rag, #hits, #hits, paintedCount(hits), retries)
+end
+
+local function watchName(prefix)
+	StickyBlood.WatchSerial = (StickyBlood.WatchSerial or 0) + 1
+	return prefix .. StickyBlood.WatchSerial
+end
+
 net.Receive("StickyBlood_Transfer", function()
 	local destId = net.ReadUInt(16)
 	local srcId = net.ReadUInt(16)
 	local token = net.ReadUInt(16)
+	local blood, hits = StickyBlood.ReadCarryList()
 	local deadline = CurTime() + 1
-	local name = "StickyBlood_Watch_" .. destId .. "_" .. srcId .. "_" .. token
+	local name = watchName("StickyBlood_Watch_" .. destId .. "_" .. srcId .. "_" .. token .. "_")
 	local acked = false
+	local retries = 0
 	local function attempt()
-		local done = snatchOnce(Entity(destId), Entity(srcId))
+		local dest = Entity(destId)
+		local src = Entity(srcId)
+		local done = snatchOnce(dest, src)
 		if done and token > 0 and not acked then
 			acked = true
 			net.Start("StickyBlood_Revived")
 			net.WriteUInt(token, 16)
 			net.SendToServer()
 		end
-		return done
+		if token ~= 0 or not hits or #hits == 0 then
+			return done
+		end
+		if IsValid(dest) and dest:GetClass() == "prop_ragdoll" and dest.StickySnatchedFrom then
+			applyCarriedHits(dest, blood, hits)
+			return hitsSettled(hits)
+		end
+		return false
 	end
-	if attempt() then return end
+	if attempt() then
+		if token == 0 then finishCarry(Entity(destId), hits, retries) end
+		return
+	end
 	hook.Add("Think", name, function()
+		retries = retries + 1
 		if attempt() or CurTime() > deadline then
 			hook.Remove("Think", name)
+			if token == 0 then finishCarry(Entity(destId), hits, retries) end
+		end
+	end)
+end)
+
+net.Receive("StickyBlood_Carry", function()
+	local ragId = net.ReadUInt(16)
+	local blood, hits = StickyBlood.ReadCarryList()
+	local deadline = CurTime() + 1
+	local name = watchName("StickyBlood_CarryWatch_" .. ragId .. "_")
+	local retries = 0
+	local function attempt()
+		local rag = Entity(ragId)
+		if not IsValid(rag) or rag:GetClass() ~= "prop_ragdoll" or not rag.StickySnatchedFrom then
+			return false
+		end
+		applyCarriedHits(rag, blood, hits)
+		return hitsSettled(hits)
+	end
+	if attempt() then
+		finishCarry(Entity(ragId), hits, retries)
+		return
+	end
+	hook.Add("Think", name, function()
+		retries = retries + 1
+		if attempt() or CurTime() > deadline then
+			hook.Remove("Think", name)
+			finishCarry(Entity(ragId), hits, retries)
 		end
 	end)
 end)
