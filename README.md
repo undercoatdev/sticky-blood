@@ -17,7 +17,9 @@ Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 
 ## Before installing
 
-Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. Use it only for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
+Sticky Blood changes two game files on your computer: `bin/win64/studiorender.dll` and `engine.dll`. It is made for **single-player and private games with friends only**.
+
+> **Important:** Before you join any online server, run the uninstaller (see [Uninstall and recovery](#uninstall-and-recovery)). Read [Can I join servers?](#can-i-join-servers) to find out why.
 
 The installer finds the code it changes by searching for it, so it keeps working when a Garry's Mod update only moves that code around. If an update really changes that code, the installer stops without touching anything. In that case, run a dry run (see below) and [open an issue](https://github.com/undercoatdev/sticky-blood/issues) with the output. The download does not include any Valve files.
 
@@ -40,7 +42,7 @@ To check that your game version is supported without changing anything, click th
 install.bat -DryRun
 ```
 
-If the installer can't find Garry's Mod, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted folder the same way and run, with your own path:
+**Only if step 3 says it can't find Garry's Mod:** right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted folder the same way and run this, with the example path replaced by your own:
 
 ```bat
 install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
@@ -74,11 +76,26 @@ install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
 
 Type these commands into a normal terminal, not into the Garry's Mod console or a game server console.
 
-If the installer can't find Garry's Mod, give it the path. In Steam, right-click Garry's Mod and choose **Manage > Browse local files** to find the `GarrysMod` folder, then:
+**Only if step 5 can't find Garry's Mod:** you can tell the installer where the game is. You do not need this if step 5 worked. In Steam, right-click Garry's Mod and choose **Manage > Browse local files** to find the `GarrysMod` folder, then run this, with the example path replaced by your own:
 
 ```bash
 bash install.sh --game "/path/to/SteamLibrary/steamapps/common/GarrysMod"
 ```
+
+## Can I join servers?
+
+**No, not while Sticky Blood is installed.** Uninstall it first, play online, then install it again when you are back in single-player.
+
+Why:
+
+- **VAC (Valve Anti-Cheat).** Garry's Mod has used VAC since it launched, and servers with the "secure" shield run it. Valve's own VAC FAQ says that third-party changes to a game's core `.exe` and `.dll` files can count as cheating, and VAC bans are permanent. Sticky Blood is not a cheat and we know of no ban caused by it, but it does change two core DLLs, so we can't promise VAC will never flag it. Don't risk your account.
+- **Server anti-cheats and admins.** Many community servers run their own anti-cheat addons, and admins can ban anyone for any reason. Some may treat a modified game as suspicious.
+- **sv_pure.** This server setting checks content files such as models, materials and sounds. As far as we know it does not check the patched DLLs, so it is not a safety guarantee either way.
+- **Crashes.** The patched code has only been tested in single-player and on private local games. On a busy server with lots of blood, it may use more memory or crash.
+
+Single-player and private local games (for example, a game hosted by you for friends) are what Sticky Blood is made for.
+
+To go online: quit the game, run `uninstall.bat` (Windows) or `bash uninstall.sh` (Linux), then start the game. If you are unsure, use Steam's **Verify integrity of game files** after uninstalling.
 
 ## Optional features
 
@@ -111,6 +128,8 @@ The **Debug Reviver** appears in the Weapons tab. Aim it at a dead NPC or a ragd
 Sticky Blood turns on `ai_serverragdolls 1`, but your existing `g_ragdoll_maxcount` limit still applies.
 
 ## Uninstall and recovery
+
+Always uninstall before playing on online servers.
 
 Fully quit the game, then double-click `uninstall.bat` in the extracted folder on Windows, or run `bash uninstall.sh` from a terminal in that folder on Linux. The uninstaller restores the original DLLs from its verified backups and removes `garrysmod/addons/sticky_blood`.
 
