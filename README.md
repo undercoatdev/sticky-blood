@@ -30,13 +30,17 @@ Requirements:
 ## Windows installation
 
 1. Fully quit Garry's Mod.
-2. Extract the release ZIP.
-3. Double-click `install.bat`.
-4. Start the game with **Play Garry's Mod**.
+2. Download `sticky-blood-v1.1.0.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest), right-click it and choose **Extract All**.
+3. Open the extracted `sticky-blood-v1.1.0` folder and double-click `install.bat` (Windows may put it inside a second folder with the same name). A window opens briefly. If it closes on its own, the install worked. If something goes wrong, it stays open and shows the error.
+4. Start the game from Steam as usual.
 
-To check that your game version is supported without changing any files, open Command Prompt in the extracted folder and run `install.bat -DryRun`.
+To check that your game version is supported without changing anything, click the address bar of the extracted folder in File Explorer, type `cmd` and press Enter, then run:
 
-If Steam is not detected, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted Sticky Blood folder and replace the example path below with that folder:
+```bat
+install.bat -DryRun
+```
+
+If the installer can't find Garry's Mod, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted folder the same way and run, with your own path:
 
 ```bat
 install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
@@ -44,23 +48,36 @@ install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
 
 ## Linux/Proton installation
 
-Fully quit Garry's Mod, extract the release, then run:
+1. Fully quit Garry's Mod.
+2. Download `sticky-blood-v1.1.0.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and extract it, for example into your `Downloads` folder.
+3. Open a terminal **in the extracted `sticky-blood-v1.1.0` folder**. In most file managers you can right-click inside the folder and choose **Open in Terminal**, or open any terminal and go there with `cd`, for example:
+
+   ```bash
+   cd ~/Downloads/sticky-blood-v1.1.0
+   ```
+
+4. Check that your game version is supported. This changes nothing:
+
+   ```bash
+   bash install.sh --dry-run
+   ```
+
+   It should list the patches it would make. If it says the build isn't supported, stop and [open an issue](https://github.com/undercoatdev/sticky-blood/issues) with the output.
+
+5. Install:
+
+   ```bash
+   bash install.sh
+   ```
+
+6. Start the game from Steam as usual.
+
+Type these commands into a normal terminal, not into the Garry's Mod console or a game server console.
+
+If the installer can't find Garry's Mod, give it the path. In Steam, right-click Garry's Mod and choose **Manage > Browse local files** to find the `GarrysMod` folder, then:
 
 ```bash
-chmod +x install.sh uninstall.sh
-./install.sh
-```
-
-To check that your game version is supported without changing any files:
-
-```bash
-./install.sh --dry-run
-```
-
-If Steam is not detected:
-
-```bash
-./install.sh --game "/path/to/SteamLibrary/steamapps/common/GarrysMod"
+bash install.sh --game "/path/to/SteamLibrary/steamapps/common/GarrysMod"
 ```
 
 ## Optional features
@@ -81,12 +98,12 @@ Sticky Blood turns on `ai_serverragdolls 1`, but your existing `g_ragdoll_maxcou
 
 ## Uninstall and recovery
 
-Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on Linux. The uninstaller restores the original DLLs from its verified backups and removes `garrysmod/addons/sticky_blood`.
+Fully quit the game, then double-click `uninstall.bat` in the extracted folder on Windows, or run `bash uninstall.sh` from a terminal in that folder on Linux. The uninstaller restores the original DLLs from its verified backups and removes `garrysmod/addons/sticky_blood`.
 
 If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood` by hand, then use Steam's **Verify integrity of game files** to restore the official DLLs.
 
 - **After Steam Verify:** Verify puts the original game files back, so run the installer again to re-apply Sticky Blood.
-- **After a game update:** If the update replaced the patched files, blood starts disappearing again. Quit the game and run `install.bat` or `./install.sh` again. If it says the build isn't supported, run the dry run (`install.bat -DryRun` or `./install.sh --dry-run`) and open an issue with the output.
+- **After a game update:** If the update replaced the patched files, blood starts disappearing again. Quit the game and run `install.bat` or `bash install.sh` again. If it says the build isn't supported, run the dry run (`install.bat -DryRun` or `bash install.sh --dry-run`) and open an issue with the output.
 - **Backups:** Original DLLs are stored beside the game files as `.stickyblood.bak` with a `.stickyblood.json` sidecar. Backups from 1.0.0 (`.stickyblood-v1.bak`, or a `.bak` whose hash matches that release) are still accepted.
 
 ## Workshop limitation
