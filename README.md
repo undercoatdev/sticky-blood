@@ -19,9 +19,13 @@ Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 
 Sticky Blood patches your local `bin/win64/studiorender.dll` and `engine.dll`. Use it only for single-player or local/private games. Do not use modified game binaries on VAC-secured or integrity-checked multiplayer servers.
 
-The installer looks for the exact code it changes. If a Garry's Mod update changes that code, it stops without touching anything. Run `install --dry-run` and open an issue with the output. The download does not include any Valve binaries.
+The installer finds the code it changes by searching for it, so it keeps working when a Garry's Mod update only moves that code around. If an update really changes that code, the installer stops without touching anything. In that case, run a dry run (see below) and [open an issue](https://github.com/undercoatdev/sticky-blood/issues) with the output. The download does not include any Valve files.
 
-Sticky Blood supports the x86-64 branch only. Native Linux is not supported (Proton only). Use Steam's standard 64-bit **Play Garry's Mod** launch option on Windows or Linux through Proton.
+Requirements:
+
+- **The 64-bit (x86-64) branch of Garry's Mod.** In Steam, right-click Garry's Mod, choose **Properties > Betas**, and pick **x86-64 - Chromium + 64-bit binaries**. Let Steam finish updating before you install. On the default branch the installer stops with a "Missing game file" message.
+- **Windows**, or **Linux through Proton**. Native Linux builds of Garry's Mod are not supported.
+- On Linux, Python 3.
 
 ## Windows installation
 
@@ -30,7 +34,7 @@ Sticky Blood supports the x86-64 branch only. Native Linux is not supported (Pro
 3. Double-click `install.bat`.
 4. Start the game with **Play Garry's Mod**.
 
-To see the planned edits without changing any files, run `install.bat -DryRun`.
+To check that your game version is supported without changing any files, open Command Prompt in the extracted folder and run `install.bat -DryRun`.
 
 If Steam is not detected, right-click Garry's Mod in Steam and choose **Manage > Browse local files** to find the `GarrysMod` folder. Then open Command Prompt in the extracted Sticky Blood folder and replace the example path below with that folder:
 
@@ -47,7 +51,7 @@ chmod +x install.sh uninstall.sh
 ./install.sh
 ```
 
-To see the planned edits without changing any files:
+To check that your game version is supported without changing any files:
 
 ```bash
 ./install.sh --dry-run
@@ -58,8 +62,6 @@ If Steam is not detected:
 ```bash
 ./install.sh --game "/path/to/SteamLibrary/steamapps/common/GarrysMod"
 ```
-
-Python 3 is required to run the Linux installer.
 
 ## Optional features
 
@@ -83,10 +85,12 @@ Fully quit the game, then run `uninstall.bat` on Windows or `./uninstall.sh` on 
 
 If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood` by hand, then use Steam's **Verify integrity of game files** to restore the official DLLs.
 
-- **After Steam Verify:** Install Sticky Blood again. The installer looks for the exact code it changes. If a Garry's Mod update changes that code, it stops without touching anything. Run `install --dry-run` and open an issue with the output.
-- **After a game update:** Run `install --dry-run`. When the signatures still match, install as usual.
+- **After Steam Verify:** Verify puts the original game files back, so run the installer again to re-apply Sticky Blood.
+- **After a game update:** If the update replaced the patched files, blood starts disappearing again. Quit the game and run `install.bat` or `./install.sh` again. If it says the build isn't supported, run the dry run (`install.bat -DryRun` or `./install.sh --dry-run`) and open an issue with the output.
 - **Backups:** Original DLLs are stored beside the game files as `.stickyblood.bak` with a `.stickyblood.json` sidecar. Backups from 1.0.0 (`.stickyblood-v1.bak`, or a `.bak` whose hash matches that release) are still accepted.
 
 ## Workshop limitation
 
-Sticky Blood cannot be installed through the Workshop alone because Workshop addons cannot replace the two game DLLs it needs. Use the release download and installer instead.
+The Workshop can only install the Lua part of Sticky Blood. That gives you blood that stays on NPCs when they become ragdolls and the Debug Reviver, but blood decals still disappear at the normal game limits, because a Workshop addon can't patch the two game DLLs.
+
+For the full mod, use the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and its installer. The installer already includes the Lua part, so unsubscribe from the Workshop version after installing to avoid running two copies.
