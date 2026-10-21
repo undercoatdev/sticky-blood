@@ -113,7 +113,7 @@ def build_text(spec, rng, shift=0, drop_id=None, duplicate_id=None, flip_prologu
         prologue, _, _ = SB.parse_sig(required["sig"])
         blob = bytes(byte if byte is not None else 0x11 for byte in prologue)
         pro_at = item["start"] + item["site"] - required["distance"]
-        if flip_prologue and item["id"] == "en_return_null":
+        if flip_prologue and item["id"] == "en_skip_count_limit":
             blob = bytes([blob[0] ^ 0xFF]) + blob[1:]
         claim(pro_at, blob)
     if duplicate_id:
@@ -213,11 +213,33 @@ class SignatureEngineTests(unittest.TestCase):
         for name, offset in base_offsets.items():
             self.assertEqual(shift_offsets[name], offset + 80)
 
+    def test_engine_pool_does_not_return_null(self):
+        engine = next(spec for spec in self.manifest["files"] if spec["path"].endswith("engine.dll"))
+        self.assertEqual(
+            [patch["id"] for patch in engine["patches"]],
+            ["en_skip_count_limit", "en_never_recycle", "en_pool_size"],
+        )
+        files = synthesize(self.manifest, seed=31)
+        _data, patched, edits, _labels = self.plan(files)["bin/win64/engine.dll"]
+        by_id = {name: (at, original, replacement) for name, at, original, replacement in edits}
+        at, _original, replacement = by_id["en_skip_count_limit"]
+        self.assertEqual(replacement, b"\x90\x90")
+        self.assertEqual(patched[at:at + 2], b"\x90\x90")
+        at, original, replacement = by_id["en_never_recycle"]
+        self.assertEqual(replacement, b"\x90" * 6)
+        self.assertNotEqual(original[:2], b"\x90\x90")
+        at, original, replacement = by_id["en_pool_size"]
+        self.assertEqual(replacement[0], 0xEB)
+        self.assertEqual(replacement[1:-4], original[1:-4])
+        self.assertEqual(replacement[-4:], bytes.fromhex("feff0000"))
+        self.assertEqual(patched[at:at + len(replacement)], replacement)
+        self.assertNotIn("en_return_null", by_id)
+
     def test_failures_write_nothing(self):
         cases = (
             {"drop_id": "sr_limit_b", "signature": "sr_limit_b"},
             {"duplicate_id": "sr_skip_count_evict", "signature": "sr_skip_count_evict"},
-            {"flip_prologue": True, "signature": "en_return_null"},
+            {"flip_prologue": True, "signature": "en_skip_count_limit"},
         )
         for case in cases:
             kwargs = dict(case)
@@ -433,7 +455,7 @@ class SignatureEngineTests(unittest.TestCase):
                 self.assertEqual(py_side["pristine_sha256"], ps_side["pristine_sha256"])
                 self.assertEqual(py_side["patched_sha256"], ps_side["patched_sha256"])
                 self.assertEqual(py_side["offsets"], ps_side["offsets"])
-                self.assertEqual(py_side["version"], "1.1.0")
+                self.assertEqual(py_side["version"], "1.1.1")
             removed = subprocess.run(
                 [
                     pwsh,

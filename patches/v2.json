@@ -1,6 +1,6 @@
 {
   "format": 2,
-  "version": "1.1.0",
+  "version": "1.1.1",
   "comment": "Signature-based patch manifest. Hex patterns: '??' = wildcard byte. [ ] inside 'sig' marks the patch site (bytes that 'expect' describes and 'replace' overwrites). Each sig must match EXACTLY once in the file. Tokens in replace: {rel32:LABEL} = little-endian int32 (LABEL - address_after_these_4_bytes); {keep} = keep original byte. LABEL = anchor or patch id, optional +N/-N.",
   "files": [
     {
@@ -28,10 +28,12 @@
       "backup": "engine.dll.stickyblood.bak",
       "known_pristine_sha256": ["7c21e827722fa7ac9ba4539dc652d3b79f58e240da49d28e75a1a9a1a88c4173", "f3e4775828b07dfb4d49e68cc9dcd8ac3cb38355623a5a7bcbe359d3ffe37580"],
       "anchors": [],
+      "note": "R_FindDynamicDecalSlot has one E8 caller in both known builds (file offsets 0x12fa8e and 0x12fa7e). That caller does not test rax before mov word [rax+0x68]. en_pool_size allocates 65534 slots and en_skip_count_limit fills them past r_decals. The full-pool path keeps the engine's original non-null fallback instead of returning NULL.",
       "patches": [
+        {"id": "en_skip_count_limit", "sig": "40 84 ff 75 ?? 44 3b c0 41 0f 4c c0 39 05 ?? ?? ?? ?? [7d 25] 8b de 45 85 c0 7e ?? 49 8b c1 48 39 30 74 ??", "expect": "7d 25", "replace": "90 90",
+         "require_before": {"sig": "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 8b f9", "distance": 88}},
         {"id": "en_never_recycle", "sig": "49 8b 0c c1 48 85 c9 74 ?? 0f b7 51 68 f6 c2 01 75 ?? 66 0f ba e2 0c [0f 83 ?? ?? ?? ??] ff c3 48 ff c0 41 3b d8 7c ?? 8b de 48 8b c6 49 3b c2 75 ??", "expect": "0f 83 ?? ?? ?? ??", "replace": "90 90 90 90 90 90"},
-        {"id": "en_return_null", "sig": "49 3b c2 75 ?? [48 8d 0d ?? ?? ?? ?? ff 15 ?? ?? ?? ?? 44 8b 05 ?? ??] ?? ?? 4c 8b 0d ?? ?? ?? ?? 40 38 35 ?? ?? ?? ?? 75 ??", "expect": "48 8d 0d ?? ?? ?? ?? ff 15 ?? ?? ?? ?? 44 8b 05 ?? ??", "replace": "33 c0 48 8b 5c 24 30 48 8b 74 24 38 48 83 c4 20 5f c3",
-         "require_before": {"sig": "48 89 5c 24 08 48 89 74 24 10 57 48 83 ec 20 8b f9", "distance": 200}}
+        {"id": "en_pool_size", "sig": "81 fa 00 20 00 00 [7d 12 48 3b cb 75 05 41 33 c0 eb 0d 48 8b 01 ff 50 68 eb 05 b8 00 20 00 00] b9 40 00 00 00 c7 05 ?? ?? ?? ?? ff ff ff ff 3b c1 0f 4c c1", "expect": "7d 12 48 3b cb 75 05 41 33 c0 eb 0d 48 8b 01 ff 50 68 eb 05 b8 00 20 00 00", "replace": "eb {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} {keep} fe ff 00 00"}
       ]
     }
   ]

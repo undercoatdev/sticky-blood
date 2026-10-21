@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.1
+
+- Fixed engine crash when the decal pool filled up.
+
 ## 1.1.0
 
 - Shotgun volleys that kill an NPC now keep all their wounds on the ragdoll (pellet carry), including pellets that hit the ragdoll just after it appears.

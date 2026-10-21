@@ -26,19 +26,21 @@ OLD_OFFSETS = {
     "sr_cave2": 0x8D49B,
     "sr_flush_exit": 0x4E90,
     "sr_find_continue": 0x9478,
+    "en_skip_count_limit": 0x12D9F8,
     "en_never_recycle": 0x12DA4E,
-    "en_return_null": 0x12DA68,
+    "en_pool_size": 0x12DDF9,
 }
 NEW_OFFSETS = dict(OLD_OFFSETS)
+NEW_OFFSETS["en_skip_count_limit"] = 0x12DA08
 NEW_OFFSETS["en_never_recycle"] = 0x12DA5E
-NEW_OFFSETS["en_return_null"] = 0x12DA78
+NEW_OFFSETS["en_pool_size"] = 0x12DE09
 OLD_PATCHED = {
     "studiorender.dll": "c98ea283ca15f2004d35d92e1b3754ce33aa3c8a455ec9ed337a0451463ac80d",
-    "engine.dll": "c21f5e735f96e6057386c420fbddd8e2fcb7347d9988ab039b4dcf2a71e71961",
+    "engine.dll": "f062d7f9a4d84f7d4f82220bda512c949e0ec03b4fe90cb46ccf9d52714992bf",
 }
 NEW_PATCHED = {
     "studiorender.dll": "8ab35804f6baca02dd40db3455db7eab5bd2e324a347d7527e265e8589c18ec9",
-    "engine.dll": "c3bebbdd1832f0c9125c2346abdb20ecabd33367574f21a59698b3aaae270a5e",
+    "engine.dll": "c3e840702f791a835cfb28a681aacb7c234a8365e0f5c784592e099324ca2da1",
 }
 OLD_PRISTINE = {
     "studiorender.dll": "01a040d57c4daac1b8a313a773579c89ee04463cc6f1409b3c2419dcefe25e8b",
@@ -113,9 +115,20 @@ class RealFixtureTests(unittest.TestCase):
             self.sb.install_game(game, self.manifest, self.sb.load_v1_index(), dry_run=False)
             for spec in self.v1["files"]:
                 target = game / spec["path"]
-                self.assertEqual(self.sb.sha256_file(target), spec["patched_sha256"])
-                backup = target.with_name(spec["path"].split("/")[-1] + ".stickyblood.bak")
+                name = target.name
+                self.assertEqual(self.sb.sha256_file(target), OLD_PATCHED[name])
+                backup = target.with_name(name + ".stickyblood.bak")
                 self.assertEqual(self.sb.sha256_file(backup), spec["pristine_sha256"])
+                # A 1.0.0 install has the old patched bytes and only the v1 backup.
+                v1_bytes = bytearray(blobs[name])
+                for patch in spec["patches"]:
+                    at = int(patch["offset"], 16)
+                    before = bytes.fromhex(patch["before"])
+                    after = bytes.fromhex(patch["after"])
+                    self.assertEqual(bytes(v1_bytes[at:at + len(before)]), before)
+                    v1_bytes[at:at + len(after)] = after
+                target.write_bytes(v1_bytes)
+                self.assertEqual(self.sb.sha256_file(target), spec["patched_sha256"])
                 sidecar = target.with_name(target.name + ".stickyblood.json")
                 sidecar.unlink()
                 backup.unlink()

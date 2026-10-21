@@ -4,7 +4,7 @@ import shutil
 import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
-VERSION = "1.1.0"
+VERSION = "1.1.1"
 PREFIX = f"sticky-blood-v{VERSION}"
 OUTPUT = ROOT / "dist" / f"{PREFIX}.zip"
 

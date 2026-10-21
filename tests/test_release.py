@@ -21,7 +21,7 @@ class ReleaseTests(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         subprocess.run([sys.executable, ROOT / "tools/build_release.py"], check=True)
-        cls.archive_path = ROOT / "dist/sticky-blood-v1.1.0.zip"
+        cls.archive_path = ROOT / "dist/sticky-blood-v1.1.1.zip"
         cls.sig = load_sig_tests()
 
     def test_release_zip_is_allowlisted_and_installs(self):
@@ -36,7 +36,7 @@ class ReleaseTests(unittest.TestCase):
                 self.assertTrue(any(name.endswith("patches/v2.json") for name in names))
                 self.assertTrue(any(name.endswith("patches/v1.0.0.json") for name in names))
                 archive.extractall(temp / "release")
-            release = temp / "release/sticky-blood-v1.1.0"
+            release = temp / "release/sticky-blood-v1.1.1"
             files = self.sig.synthesize(self.sig.SB.load_manifest(), seed=4)
             game = self.sig.make_game(temp / "fixture", files)
             subprocess.run(

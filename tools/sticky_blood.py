@@ -742,7 +742,7 @@ def uninstall_game(game, manifest, v1_index, dry_run=False):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Install or remove Sticky Blood v1.1.0")
+    parser = argparse.ArgumentParser(description="Install or remove Sticky Blood v1.1.1")
     parser.add_argument("action", choices=("install", "uninstall"))
     parser.add_argument("--game", help="Path to GarrysMod or its garrysmod folder")
     parser.add_argument(

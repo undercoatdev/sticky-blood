@@ -32,8 +32,8 @@ Requirements:
 ## Windows installation
 
 1. Fully quit Garry's Mod.
-2. Download `sticky-blood-v1.1.0.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest), right-click it and choose **Extract All**.
-3. Open the extracted `sticky-blood-v1.1.0` folder and double-click `install.bat` (Windows may put it inside a second folder with the same name). A window opens briefly. If it closes on its own, the install worked. If something goes wrong, it stays open and shows the error.
+2. Download `sticky-blood-v1.1.1.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest), right-click it and choose **Extract All**.
+3. Open the extracted `sticky-blood-v1.1.1` folder and double-click `install.bat` (Windows may put it inside a second folder with the same name). A window opens briefly. If it closes on its own, the install worked. If something goes wrong, it stays open and shows the error.
 4. Start the game from Steam as usual.
 
 To check that your game version is supported without changing anything, click the address bar of the extracted folder in File Explorer, type `cmd` and press Enter, then run:
@@ -51,11 +51,11 @@ install.bat -GamePath "C:\Program Files (x86)\Steam\steamapps\common\GarrysMod"
 ## Linux/Proton installation
 
 1. Fully quit Garry's Mod.
-2. Download `sticky-blood-v1.1.0.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and extract it, for example into your `Downloads` folder.
-3. Open a terminal **in the extracted `sticky-blood-v1.1.0` folder**. In most file managers you can right-click inside the folder and choose **Open in Terminal**, or open any terminal and go there with `cd`, for example:
+2. Download `sticky-blood-v1.1.1.zip` from the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and extract it, for example into your `Downloads` folder.
+3. Open a terminal **in the extracted `sticky-blood-v1.1.1` folder**. In most file managers you can right-click inside the folder and choose **Open in Terminal**, or open any terminal and go there with `cd`, for example:
 
    ```bash
-   cd ~/Downloads/sticky-blood-v1.1.0
+   cd ~/Downloads/sticky-blood-v1.1.1
    ```
 
 4. Check that your game version is supported. This changes nothing:
