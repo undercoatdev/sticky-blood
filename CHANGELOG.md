@@ -2,12 +2,14 @@
 
 ## 1.1.0
 
-- Shotgun volleys that kill an NPC now keep all their wounds on the ragdoll.
+- Shotgun volleys that kill an NPC now keep all their wounds on the ragdoll (pellet carry), including pellets that hit the ragdoll just after it appears.
+- Carried pellet hits use the small flesh bullet-hole decal, one per pellet.
 - Locate patch sites by byte signatures, so a Garry's Mod update can still install when that code has only moved.
 - Stop without modifying files when a signature is missing, ambiguous, or the original bytes differ.
 - Add `install --dry-run` so an unsupported build can be reported from the plan output.
 - Keep 1.0.0 backups usable when their hash matches that release.
 - Require the x86-64 branch. Native Linux is not supported (Proton only).
+- Removed the Debug Reviver weapon. The Steam Workshop item is now an empty placeholder.
 
 ## 1.0.0
 

@@ -283,22 +283,6 @@ local function spawnStanding(class, model, skin, groups, blood, pos, yaw)
 	return npc
 end
 
-function StickyBlood.ReviveRagdoll(rag)
-	if not IsValid(rag) or rag:GetClass() ~= "prop_ragdoll" then return end
-	if not rag.StickyClass then return end
-	local npc = spawnStanding(
-		rag.StickyClass,
-		rag.StickyModel,
-		rag.StickySkin,
-		rag.StickyBodygroups,
-		rag.StickyBlood,
-		rag:GetPos(),
-		rag:GetAngles().y
-	)
-	if not IsValid(npc) then return end
-	StickyBlood.RequestSnatch(npc, rag)
-end
-
 function StickyBlood.ReviveDeadNPC(npc)
 	if not IsValid(npc) or not npc:IsNPC() then return end
 	if npc:Health() > 0 then return end

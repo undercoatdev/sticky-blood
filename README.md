@@ -17,7 +17,7 @@ Sticky Blood keeps blood decals from disappearing in Garry's Mod.
 
 ## Before installing
 
-Sticky Blood changes two game files on your computer: `bin/win64/studiorender.dll` and `engine.dll`. It is made for **single-player and private games with friends only**.
+Sticky Blood changes two game files on your computer: `bin/win64/studiorender.dll` and `bin/win64/engine.dll`. It is made for **single-player and private games with friends only**.
 
 > **Important:** Before you join any online server, run the uninstaller (see [Uninstall and recovery](#uninstall-and-recovery)). Read [Can I join servers?](#can-i-join-servers) to find out why.
 
