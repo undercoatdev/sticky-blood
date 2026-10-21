@@ -121,10 +121,6 @@ sticky_blood_debug 0
 
 `sticky_blood_carry` turns this on (`1`) or off (`0`). `sticky_blood_carry_ticks` is how many server ticks before the death still count. `sticky_blood_carry_window` is how many seconds of bullet hits on the new ragdoll are kept. `sticky_blood_carry_max` is the most hits kept on one body. `sticky_blood_debug 1` prints one line each time hits are carried.
 
-### Debug Reviver
-
-The **Debug Reviver** appears in the Weapons tab. Aim it at a dead NPC or a ragdoll created from one, then use primary fire to bring the NPC back without wiping away the blood already on it.
-
 Sticky Blood turns on `ai_serverragdolls 1`, but your existing `g_ragdoll_maxcount` limit still applies.
 
 ## Uninstall and recovery
@@ -139,8 +135,6 @@ If the uninstaller cannot use its backups, remove `garrysmod/addons/sticky_blood
 - **After a game update:** If the update replaced the patched files, blood starts disappearing again. Quit the game and run `install.bat` or `bash install.sh` again. If it says the build isn't supported, run the dry run (`install.bat -DryRun` or `bash install.sh --dry-run`) and open an issue with the output.
 - **Backups:** Original DLLs are stored beside the game files as `.stickyblood.bak` with a `.stickyblood.json` sidecar. Backups from 1.0.0 (`.stickyblood-v1.bak`, or a `.bak` whose hash matches that release) are still accepted.
 
-## Workshop limitation
+## Workshop item
 
-The Workshop can only install the Lua part of Sticky Blood. That gives you blood that stays on NPCs when they become ragdolls and the Debug Reviver, but blood decals still disappear at the normal game limits, because a Workshop addon can't patch the two game DLLs.
-
-For the full mod, use the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and its installer. The installer already includes the Lua part, so unsubscribe from the Workshop version after installing to avoid running two copies.
+The Steam Workshop item ([Infinite Blood Decals](https://steamcommunity.com/sharedfiles/filedetails/?id=3823903039)) is empty on purpose. Subscribing to it installs nothing. To get the mod, use the [latest release](https://github.com/undercoatdev/sticky-blood/releases/latest) and its installer.
