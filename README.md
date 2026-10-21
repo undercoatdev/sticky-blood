@@ -121,7 +121,9 @@ sticky_blood_debug 0
 
 `sticky_blood_carry` turns this on (`1`) or off (`0`). `sticky_blood_carry_ticks` is how many server ticks before the death still count. `sticky_blood_carry_window` is how many seconds of bullet hits on the new ragdoll are kept. `sticky_blood_carry_max` is the most hits kept on one body. `sticky_blood_debug 1` prints one line each time hits are carried.
 
-Sticky Blood turns on `ai_serverragdolls 1`, but your existing `g_ragdoll_maxcount` limit still applies.
+Sticky Blood turns on `ai_serverragdolls 1` while it runs and puts your old value back when the game shuts down. To leave `ai_serverragdolls` alone, set `sticky_blood_force_serverragdolls 0`. Your existing `g_ragdoll_maxcount` limit still applies.
+
+`sticky_blood_debug` is not saved, so it is back to `0` after a restart.
 
 ## Uninstall and recovery
 

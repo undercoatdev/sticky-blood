@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+- `sticky_blood_debug` is no longer saved between sessions.
+- `ai_serverragdolls` is restored to its previous value on shutdown. New `sticky_blood_force_serverragdolls` (default 1) turns the forcing off.
+- Removed leftover revive code and the unused `StickyBlood_Revived` network message.
+
 ## 1.1.1
 
 - Fixed engine crash when the decal pool filled up.

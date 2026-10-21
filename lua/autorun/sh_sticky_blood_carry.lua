@@ -172,6 +172,8 @@ if CreateConVar and not (GetConVar and GetConVar("sticky_blood_carry")) then
 	CreateConVar("sticky_blood_carry", "1", flags, "Keep death-tick bullet hits on the ragdoll (1 on, 0 off)", 0, 1)
 	CreateConVar("sticky_blood_carry_ticks", "1", flags, "Server ticks before death whose bullet hits are kept", 0, 32)
 	CreateConVar("sticky_blood_carry_window", "0.3", flags, "Seconds after ragdoll creation to keep bullet hits on it", 0, 5)
+	CreateConVar("sticky_blood_force_serverragdolls", "1", FCVAR_ARCHIVE, "Force ai_serverragdolls 1 while Sticky Blood runs and restore the old value on shutdown (1 on, 0 off)", 0, 1)
 	CreateConVar("sticky_blood_carry_max", "32", flags, "Maximum bullet hits carried onto one body", 1, 255)
-	CreateConVar("sticky_blood_debug", "0", flags, "Print one line each time bullet hits are carried", 0, 1)
+	-- Replicated so the client can print its side too; never archived, so it resets on restart.
+	CreateConVar("sticky_blood_debug", "0", FCVAR_REPLICATED, "Print one line each time bullet hits are carried", 0, 1)
 end

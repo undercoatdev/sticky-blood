@@ -1,9 +1,7 @@
 StickyBlood = StickyBlood or {}
-StickyBlood.Pending = StickyBlood.Pending or {}
 
 util.AddNetworkString("StickyBlood_Transfer")
 util.AddNetworkString("StickyBlood_Carry")
-util.AddNetworkString("StickyBlood_Revived")
 
 StickyBlood.HitLog = StickyBlood.HitLog or {}
 
@@ -195,11 +193,30 @@ local function recordHit(ent, dmginfo)
 	}, carryMax())
 end
 
+-- Remember the host's ai_serverragdolls value once, force it to 1 while the
+-- addon runs (sticky_blood_force_serverragdolls 1), and put it back on shutdown.
 local function forceServerRagdolls()
-	RunConsoleCommand("ai_serverragdolls", "1")
+	local force = GetConVar("sticky_blood_force_serverragdolls")
+	if force and force:GetInt() == 0 then return end
+	local cv = GetConVar("ai_serverragdolls")
+	if not cv then return end
+	if StickyBlood.PrevServerRagdolls == nil then
+		StickyBlood.PrevServerRagdolls = cv:GetString()
+	end
+	if cv:GetString() ~= "1" then
+		RunConsoleCommand("ai_serverragdolls", "1")
+	end
+end
+
+local function restoreServerRagdolls()
+	local prev = StickyBlood.PrevServerRagdolls
+	if prev == nil then return end
+	StickyBlood.PrevServerRagdolls = nil
+	RunConsoleCommand("ai_serverragdolls", prev)
 end
 
 hook.Add("Initialize", "StickyBlood_ServerRagdolls", forceServerRagdolls)
+hook.Add("ShutDown", "StickyBlood_ServerRagdolls", restoreServerRagdolls)
 forceServerRagdolls()
 
 local function captureBodygroups(ent)
@@ -230,73 +247,6 @@ function StickyBlood.Remember(rag, npc)
 	if npc.GetBloodColor then
 		rag.StickyBlood = npc:GetBloodColor()
 	end
-end
-
-function StickyBlood.RequestSnatch(dest, src)
-	if not IsValid(dest) or not IsValid(src) then return end
-	StickyBlood.Token = (StickyBlood.Token or 0) + 1
-	if StickyBlood.Token > 65535 then
-		StickyBlood.Token = 1
-	end
-	local token = StickyBlood.Token
-	StickyBlood.Pending[token] = src
-
-	net.Start("StickyBlood_Transfer")
-	net.WriteUInt(dest:EntIndex(), 16)
-	net.WriteUInt(src:EntIndex(), 16)
-	net.WriteUInt(token, 16)
-	StickyBlood.WriteCarryList(-1, nil)
-	net.Broadcast()
-
-	timer.Simple(1, function()
-		local ent = StickyBlood.Pending[token]
-		if not ent then return end
-		StickyBlood.Pending[token] = nil
-		if IsValid(ent) then
-			ent:Remove()
-		end
-	end)
-end
-
-local function spawnStanding(class, model, skin, groups, blood, pos, yaw)
-	if not class or class == "" then return end
-	local npc = ents.Create(class)
-	if not IsValid(npc) then return end
-	npc:SetPos(pos + Vector(0, 0, 8))
-	npc:SetAngles(Angle(0, yaw or 0, 0))
-	if model and model ~= "" then
-		npc:SetModel(model)
-	end
-	npc:Spawn()
-	npc:Activate()
-	if model and model ~= "" then
-		npc:SetModel(model)
-	end
-	if skin then
-		npc:SetSkin(skin)
-	end
-	applyBodygroups(npc, groups)
-	if blood and npc.SetBloodColor then
-		npc:SetBloodColor(blood)
-	end
-	npc:DropToFloor()
-	return npc
-end
-
-function StickyBlood.ReviveDeadNPC(npc)
-	if not IsValid(npc) or not npc:IsNPC() then return end
-	if npc:Health() > 0 then return end
-	local fresh = spawnStanding(
-		npc:GetClass(),
-		npc:GetModel(),
-		npc:GetSkin(),
-		captureBodygroups(npc),
-		npc.GetBloodColor and npc:GetBloodColor() or nil,
-		npc:GetPos(),
-		npc:GetAngles().y
-	)
-	if not IsValid(fresh) then return end
-	StickyBlood.RequestSnatch(fresh, npc)
 end
 
 hook.Add("CreateEntityRagdoll", "StickyBlood", function(npc, rag)
@@ -333,16 +283,5 @@ hook.Add("EntityRemoved", "StickyBlood_CarryCleanup", function(ent)
 	end)
 	if idx and idx > 0 then
 		timer.Remove("StickyBlood_Carry_" .. idx)
-	end
-end)
-
-net.Receive("StickyBlood_Revived", function(_, ply)
-	if not IsValid(ply) then return end
-	local token = net.ReadUInt(16)
-	local ent = StickyBlood.Pending[token]
-	if not ent then return end
-	StickyBlood.Pending[token] = nil
-	if IsValid(ent) then
-		ent:Remove()
 	end
 end)

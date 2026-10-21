@@ -184,18 +184,11 @@ net.Receive("StickyBlood_Transfer", function()
 	local blood, hits = StickyBlood.ReadCarryList()
 	local deadline = CurTime() + 1
 	local name = watchName("StickyBlood_Watch_" .. destId .. "_" .. srcId .. "_" .. token .. "_")
-	local acked = false
 	local retries = 0
 	local function attempt()
 		local dest = Entity(destId)
 		local src = Entity(srcId)
 		local done = snatchOnce(dest, src)
-		if done and token > 0 and not acked then
-			acked = true
-			net.Start("StickyBlood_Revived")
-			net.WriteUInt(token, 16)
-			net.SendToServer()
-		end
 		if token ~= 0 or not hits or #hits == 0 then
 			return done
 		end
